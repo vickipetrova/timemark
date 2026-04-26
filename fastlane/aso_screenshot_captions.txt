@@ -1,0 +1,21 @@
+ASO reference (not uploaded by deliver): eight screenshot captions, keyword-rich, short. Localize the EN line per your asset pipeline.
+
+1 Hero: EN "Track Every Day That Matters" | ES "Cuenta Cada Día Que Importa" | PT "Acompanhe Cada Dia Que Importa" | FR "Comptez Chaque Jour Qui Compte" | AR "تتبع كل يوم يهمك" | ZH "记录每一个重要的日子"
+
+2 Count-since: EN "142 Days Smoke-Free. Keep Going." | ES "142 Días Sin Fumar. Sigue Así." | PT "142 Dias Sem Fumar. Continue." | FR "142 Jours Sans Fumer. Continuez." | AR "142 يوماً بدون تدخين. استمر." | ZH "戒烟142天，继续加油。"
+
+3 Count-until: EN "27 Days Until Your Next Adventure" | ES "27 Días Para Tu Próxima Aventura" | PT "27 Dias Para Sua Próxima Aventura" | FR "27 Jours Avant Votre Aventure" | AR "27 يوماً لمغامرتك القادمة" | ZH "距离下一次冒险还有27天"
+
+4 Categories: EN "Organize Life, Work, Health & More" | ES "Organiza Vida, Trabajo, Salud y Más" | PT "Organize Vida, Trabalho, Saúde" | FR "Organisez Vie, Travail, Santé" | AR "نظم الحياة والعمل والصحة" | ZH "分类管理生活、工作、健康"
+
+5 Widgets: EN "Your Streaks on Your Home Screen" | ES "Tus Rachas en Tu Pantalla de Inicio" | PT "Suas Sequências na Tela Inicial" | FR "Vos Séries sur Votre Écran d'Accueil" | AR "سلاسلك على شاشتك الرئيسية" | ZH "在主屏幕上查看你的记录"
+
+6 Reminders: EN "Smart Reminders. Never Forget." | ES "Recordatorios. Nunca Olvides." | PT "Lembretes Inteligentes. Nunca Esqueça." | FR "Rappels Intelligents. N'oubliez Jamais." | AR "تذكيرات ذكية. لا تنسَ أبداً." | ZH "智能提醒，永不遗忘。"
+
+7 Themes: EN "Five Minimal Themes. Your Style." | ES "Cinco Temas Minimalistas. Tu Estilo." | PT "Cinco Temas Minimalistas. Seu Estilo." | FR "Cinq Thèmes Minimalistes. Votre Style." | AR "خمسة أنماط بسيطة. أسلوبك." | ZH "五种极简主题，随心切换。"
+
+8 Sync: EN "Sync Across iPhone, iPad & Mac" | ES "Sincroniza en iPhone, iPad y Mac" | PT "Sincronize no iPhone, iPad e Mac" | FR "Synchronisez iPhone, iPad et Mac" | AR "مزامنة عبر iPhone وiPad وMac" | ZH "在 iPhone、iPad 和 Mac 间同步"
+
+Design: 1320x2868, bg #0A0A0A, caption in top ~25%, SF Pro, no decorative illustrations (match app Palantir-minimal look).
+
+In-app event ideas (configure in App Store Connect, not deliver files): New Year reset; Sober Oct / Dry Jan; back-to-school countdown; year-end review.

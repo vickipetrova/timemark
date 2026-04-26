@@ -2,8 +2,9 @@ import SwiftUI
 import WidgetKit
 
 @main
-struct TimeMarkWidgetBundle: WidgetBundle {
+struct TallyDaysWidgetBundle: WidgetBundle {
     var body: some Widget {
-        TimeMarkWidget()
+        SingleEventWidget()
+        MultiEventWidget()
     }
 }

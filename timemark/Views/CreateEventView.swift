@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import WidgetKit
 
 struct CreateEventView: View {
     enum Mode {
@@ -238,6 +239,7 @@ struct CreateEventView: View {
             Task { await ReminderManager.shared.scheduleReminder(for: event) }
         }
 
+        WidgetCenter.shared.reloadAllTimelines()
         HapticManager.success()
         dismiss()
     }
@@ -247,6 +249,7 @@ struct CreateEventView: View {
             ReminderManager.shared.cancelReminder(for: event)
             modelContext.delete(event)
             try? modelContext.save()
+            WidgetCenter.shared.reloadAllTimelines()
             HapticManager.medium()
             dismiss()
         }

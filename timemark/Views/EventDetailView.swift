@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import WidgetKit
 
 struct EventDetailView: View {
     @Bindable var event: TrackedEvent
@@ -267,6 +268,7 @@ struct EventDetailView: View {
             event.eventDate = Date()
         }
         try? modelContext.save()
+        WidgetCenter.shared.reloadAllTimelines()
         HapticManager.medium()
     }
 
@@ -281,6 +283,7 @@ struct EventDetailView: View {
         ReminderManager.shared.cancelReminder(for: event)
         modelContext.delete(event)
         try? modelContext.save()
+        WidgetCenter.shared.reloadAllTimelines()
         HapticManager.medium()
         dismiss()
     }

@@ -1,9 +1,11 @@
 import SwiftUI
 import SwiftData
 import UniformTypeIdentifiers
+import WidgetKit
 
 struct SettingsView: View {
-    @AppStorage("selectedTheme") private var selectedThemeRaw: String = AppTheme.monochrome.rawValue
+    @AppStorage("selectedTheme", store: UserDefaults(suiteName: SharedModelContainer.appGroupID))
+    private var selectedThemeRaw: String = AppTheme.monochrome.rawValue
     @Environment(\.modelContext) private var modelContext
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.appTheme) private var theme
@@ -22,6 +24,7 @@ struct SettingsView: View {
                     ForEach(AppTheme.allCases) { t in
                         Button {
                             selectedThemeRaw = t.rawValue
+                            WidgetCenter.shared.reloadAllTimelines()
                             HapticManager.light()
                         } label: {
                             HStack(spacing: 12) {
@@ -143,8 +146,19 @@ struct SettingsView: View {
                         .fill(theme.mutedColor(for: colorScheme).opacity(0.3))
                         .frame(height: 0.5)
 
-                    Link(destination: URL(string: "https://timemark.app/privacy")!) {
+                    Link(destination: URL(string: "https://vickipetrova.com/apps/tally-days/privacy")!) {
                         Text("Privacy Policy")
+                            .font(.body)
+                            .foregroundStyle(AppTheme.foreground(for: colorScheme))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    
+                    Rectangle()
+                        .fill(theme.mutedColor(for: colorScheme).opacity(0.3))
+                        .frame(height: 0.5)
+
+                    Link(destination: URL(string: "https://vickipetrova.com/apps/tally-days")!) {
+                        Text("Website")
                             .font(.body)
                             .foregroundStyle(AppTheme.foreground(for: colorScheme))
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -161,7 +175,7 @@ struct SettingsView: View {
             isPresented: $showingExporter,
             document: exportDocument,
             contentType: .json,
-            defaultFilename: "TimeMarkExport"
+            defaultFilename: "TallyDaysExport"
         ) { _ in }
         .fileImporter(
             isPresented: $showingImporter,

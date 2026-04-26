@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import WidgetKit
 
 struct CompactMainView: View {
     @Environment(\.modelContext) private var modelContext
@@ -137,7 +138,7 @@ struct CompactMainView: View {
         }
 
         ToolbarItem(placement: .principal) {
-            Text("TIMEMARK")
+            Text("TALLY DAYS")
                 .font(.caption.weight(.medium))
                 .tracking(4)
                 .foregroundStyle(AppTheme.foreground(for: colorScheme))
@@ -323,6 +324,7 @@ struct CompactMainView: View {
                 event.sortOrder = index
             }
             try? modelContext.save()
+            WidgetCenter.shared.reloadAllTimelines()
             HapticManager.light()
             return true
         }

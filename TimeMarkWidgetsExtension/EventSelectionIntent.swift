@@ -2,12 +2,13 @@ import AppIntents
 import SwiftData
 import Foundation
 
-struct TimeMarkEventEntity: AppEntity {
+struct TallyDaysEventEntity: AppEntity {
     var id: UUID
     var title: String
     var eventDate: Date
     var eventTypeRaw: String
     var displayFormatRaw: String
+    var categoryName: String?
     var categoryColorHex: String?
 
     static var typeDisplayRepresentation: TypeDisplayRepresentation {
@@ -15,29 +16,32 @@ struct TimeMarkEventEntity: AppEntity {
     }
 
     var displayRepresentation: DisplayRepresentation {
-        DisplayRepresentation(title: "\(title)")
+        let typeLabel = eventTypeRaw == EventType.since.rawValue ? "Since" : "Until"
+        return DisplayRepresentation(
+            title: "\(title)",
+            subtitle: "\(typeLabel) \(eventDate.formatted(date: .abbreviated, time: .omitted))"
+        )
     }
 
-    static var defaultQuery = TimeMarkEventQuery()
+    static var defaultQuery = TallyDaysEventQuery()
 }
 
-struct TimeMarkEventQuery: EntityQuery {
-    func entities(for identifiers: [UUID]) async throws -> [TimeMarkEventEntity] {
-        try await fetch(matching: identifiers)
+struct TallyDaysEventQuery: EntityQuery {
+    func entities(for identifiers: [UUID]) async throws -> [TallyDaysEventEntity] {
+        try await fetchEntities(matching: identifiers)
     }
 
-    func suggestedEntities() async throws -> [TimeMarkEventEntity] {
-        try await fetch(matching: nil)
+    func suggestedEntities() async throws -> [TallyDaysEventEntity] {
+        try await fetchEntities(matching: nil)
     }
 
     @MainActor
-    private func fetch(matching ids: [UUID]?) async throws -> [TimeMarkEventEntity] {
-        let schema = Schema([TrackedEvent.self, EventCategory.self])
-        let config = ModelConfiguration(schema: schema, cloudKitDatabase: .automatic)
-        let container = try ModelContainer(for: schema, configurations: config)
+    private func fetchEntities(matching ids: [UUID]?) throws -> [TallyDaysEventEntity] {
+        let container = SharedModelContainer.create()
         let context = ModelContext(container)
-
-        let events = try context.fetch(FetchDescriptor<TrackedEvent>())
+        let events = try context.fetch(
+            FetchDescriptor<TrackedEvent>(sortBy: [SortDescriptor(\.sortOrder)])
+        )
         let categories = try context.fetch(FetchDescriptor<EventCategory>())
 
         let filtered: [TrackedEvent]
@@ -48,14 +52,15 @@ struct TimeMarkEventQuery: EntityQuery {
         }
 
         return filtered.map { event in
-            let colorHex = categories.first(where: { $0.id == event.categoryID })?.colorHex
-            return TimeMarkEventEntity(
+            let category = categories.first(where: { $0.id == event.categoryID })
+            return TallyDaysEventEntity(
                 id: event.id,
                 title: event.title,
                 eventDate: event.eventDate,
                 eventTypeRaw: event.eventType.rawValue,
                 displayFormatRaw: event.displayFormat.rawValue,
-                categoryColorHex: colorHex
+                categoryName: category?.name,
+                categoryColorHex: category?.colorHex
             )
         }
     }
@@ -66,5 +71,13 @@ struct SelectEventIntent: WidgetConfigurationIntent {
     static var description = IntentDescription("Choose which event to display in the widget.")
 
     @Parameter(title: "Event")
-    var event: TimeMarkEventEntity?
+    var event: TallyDaysEventEntity?
+}
+
+struct SelectEventsIntent: WidgetConfigurationIntent {
+    static var title: LocalizedStringResource = "Select Events"
+    static var description = IntentDescription("Choose events to display in the widget.")
+
+    @Parameter(title: "Events")
+    var events: [TallyDaysEventEntity]?
 }

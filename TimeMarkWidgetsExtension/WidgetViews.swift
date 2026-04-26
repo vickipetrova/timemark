@@ -1,219 +1,480 @@
 import SwiftUI
 import WidgetKit
 
-struct TimeMarkWidgetView: View {
-    @Environment(\.widgetFamily) private var family
-    var entry: TimeMarkEntry
+// MARK: - Router Views
+
+struct SingleEventRouterView: View {
+    let entry: SingleEventEntry
+    @Environment(\.widgetFamily) var family
 
     var body: some View {
         switch family {
         case .systemSmall:
-            SmallTimeMarkView(entry: entry)
-        case .systemMedium:
-            MediumTimeMarkView(entry: entry)
-        case .systemLarge:
-            LargeTimeMarkView(entry: entry)
+            SmallWidgetView(entry: entry)
         case .accessoryCircular:
-            CircularAccessoryView(entry: entry)
+            CircularWidgetView(entry: entry)
         case .accessoryRectangular:
-            RectangularAccessoryView(entry: entry)
+            RectangularWidgetView(entry: entry)
         case .accessoryInline:
-            InlineAccessoryView(entry: entry)
+            InlineWidgetView(entry: entry)
         default:
-            SmallTimeMarkView(entry: entry)
+            SmallWidgetView(entry: entry)
         }
     }
 }
 
-private struct SmallTimeMarkView: View {
-    let entry: TimeMarkEntry
+struct MultiEventRouterView: View {
+    let entry: MultiEventEntry
+    @Environment(\.widgetFamily) var family
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Rectangle()
-                .fill(eventAccentColor(for: entry.event))
-                .frame(height: 3)
-
-            Spacer()
-
-            Text(entry.event?.title ?? "TimeMark")
-                .font(.caption.weight(.bold))
-                .lineLimit(2)
-
-            Spacer()
-
-            HStack(alignment: .firstTextBaseline, spacing: 4) {
-                Text(valueString(for: entry.event))
-                    .font(.system(.largeTitle, design: .monospaced).weight(.ultraLight))
-                    .monospacedDigit()
-                    .minimumScaleFactor(0.5)
-                    .lineLimit(1)
-                Text(unitString(for: entry.event))
-                    .font(.caption2.weight(.semibold))
-                    .foregroundStyle(.secondary)
-            }
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-    }
-}
-
-private struct MediumTimeMarkView: View {
-    let entry: TimeMarkEntry
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            ForEach(events.prefix(3), id: \.id) { event in
-                row(event: event)
-                Divider().opacity(0.3)
-            }
-        }
-    }
-
-    private var events: [TimeMarkEventEntity] {
-        var all: [TimeMarkEventEntity] = []
-        if let primary = entry.event { all.append(primary) }
-        all.append(contentsOf: entry.additionalEvents)
-        return all
-    }
-
-    private func row(event: TimeMarkEventEntity) -> some View {
-        HStack {
-            Rectangle()
-                .fill(eventAccentColor(for: event))
-                .frame(width: 3, height: 28)
-            Text(event.title)
-                .font(.callout.weight(.semibold))
-                .lineLimit(1)
-            Spacer()
-            HStack(alignment: .firstTextBaseline, spacing: 3) {
-                Text(valueString(for: event))
-                    .font(.system(.title3, design: .monospaced).weight(.ultraLight))
-                    .monospacedDigit()
-                Text(unitString(for: event))
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
-            }
+        switch family {
+        case .systemMedium:
+            MediumWidgetView(entry: entry)
+        case .systemLarge:
+            LargeWidgetView(entry: entry)
+        case .systemExtraLarge:
+            ExtraLargeWidgetView(entry: entry)
+        default:
+            MediumWidgetView(entry: entry)
         }
     }
 }
 
-private struct LargeTimeMarkView: View {
-    let entry: TimeMarkEntry
+// MARK: - Small Widget
 
-    var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            ForEach(events.prefix(5), id: \.id) { event in
-                HStack {
-                    Rectangle()
-                        .fill(eventAccentColor(for: event))
-                        .frame(width: 3, height: 36)
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(event.title)
-                            .font(.body.weight(.semibold))
-                            .lineLimit(1)
-                        Text(event.eventDate.formatted(date: .abbreviated, time: .omitted))
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
-                    }
-                    Spacer()
-                    HStack(alignment: .firstTextBaseline, spacing: 3) {
-                        Text(valueString(for: event))
-                            .font(.system(.title2, design: .monospaced).weight(.ultraLight))
-                            .monospacedDigit()
-                        Text(unitString(for: event))
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-                Divider().opacity(0.25)
-            }
-        }
-    }
-
-    private var events: [TimeMarkEventEntity] {
-        var all: [TimeMarkEventEntity] = []
-        if let primary = entry.event { all.append(primary) }
-        all.append(contentsOf: entry.additionalEvents)
-        return all
-    }
-}
-
-private struct CircularAccessoryView: View {
-    let entry: TimeMarkEntry
-
-    var body: some View {
-        VStack(spacing: 0) {
-            Text(valueString(for: entry.event))
-                .font(.system(.title3, design: .monospaced).weight(.ultraLight))
-                .monospacedDigit()
-            Text(unitString(for: entry.event))
-                .font(.system(size: 8, weight: .semibold))
-        }
-    }
-}
-
-private struct RectangularAccessoryView: View {
-    let entry: TimeMarkEntry
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Text(entry.event?.title ?? "TimeMark")
-                .font(.caption2.weight(.semibold))
-                .lineLimit(1)
-            HStack(alignment: .firstTextBaseline, spacing: 2) {
-                Text(valueString(for: entry.event))
-                    .font(.system(.title3, design: .monospaced).weight(.ultraLight))
-                    .monospacedDigit()
-                Text(unitString(for: entry.event))
-                    .font(.caption2)
-            }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-}
-
-private struct InlineAccessoryView: View {
-    let entry: TimeMarkEntry
+struct SmallWidgetView: View {
+    let entry: SingleEventEntry
 
     var body: some View {
         if let event = entry.event {
-            Text("\(event.title): \(valueString(for: event)) \(unitString(for: event))")
+            let formatted = widgetFormat(event: event)
+            VStack(alignment: .leading, spacing: 0) {
+                Rectangle()
+                    .fill(categoryColor(for: event))
+                    .frame(height: 2)
+                    .padding(.bottom, 8)
+
+                Spacer()
+
+                HStack {
+                    Spacer()
+                    VStack(spacing: 2) {
+                        Text(formatted.value)
+                            .font(.system(size: 48, weight: .ultraLight, design: .monospaced))
+                            .monospacedDigit()
+                            .minimumScaleFactor(0.5)
+                            .lineLimit(1)
+
+                        if !formatted.unit.isEmpty {
+                            Text(formatted.unit.uppercased())
+                                .font(.caption2)
+                                .tracking(3)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    Spacer()
+                }
+
+                Spacer()
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(event.title)
+                        .font(.caption.weight(.medium))
+                        .lineLimit(1)
+
+                    HStack(spacing: 4) {
+                        if let catName = event.categoryName {
+                            Text(catName.uppercased())
+                                .font(.system(size: 8))
+                                .tracking(1.5)
+                        }
+                        Text("·")
+                            .font(.system(size: 8))
+                        Text(event.eventTypeRaw == EventType.since.rawValue ? "SINCE" : "UNTIL")
+                            .font(.system(size: 8))
+                            .tracking(1.5)
+                    }
+                    .foregroundStyle(.tertiary)
+                }
+            }
+            .widgetURL(URL(string: "tallydays://event/\(event.id.uuidString)"))
         } else {
-            Text("TimeMark")
+            emptySmallView
+        }
+    }
+
+    private var emptySmallView: some View {
+        VStack(spacing: 4) {
+            Text("NO EVENTS")
+                .font(.caption)
+                .tracking(4)
+                .foregroundStyle(.secondary)
+            Text("Add an event in TallyDays")
+                .font(.system(size: 8))
+                .foregroundStyle(.tertiary)
         }
     }
 }
 
-private func valueString(for event: TimeMarkEventEntity?) -> String {
-    guard let event else { return "0" }
-    return widgetFormat(event: event).value
+// MARK: - Medium Widget
+
+struct MediumWidgetView: View {
+    let entry: MultiEventEntry
+
+    var body: some View {
+        if entry.events.isEmpty {
+            emptyView
+        } else {
+            VStack(alignment: .leading, spacing: 0) {
+                Text("TALLYDAYS")
+                    .font(.system(size: 8))
+                    .tracking(3)
+                    .foregroundStyle(.secondary)
+                    .padding(.bottom, 4)
+
+                Rectangle()
+                    .fill(WidgetTheme.current.muted)
+                    .frame(height: 0.5)
+                    .padding(.bottom, 6)
+
+                VStack(spacing: 4) {
+                    ForEach(Array(entry.events.prefix(3).enumerated()), id: \.element.id) { index, event in
+                        Link(destination: URL(string: "tallydays://event/\(event.id.uuidString)")!) {
+                            WidgetEventRow(event: event, compact: false)
+                        }
+                        if index < min(entry.events.count, 3) - 1 {
+                            Rectangle()
+                                .fill(WidgetTheme.current.muted.opacity(0.3))
+                                .frame(height: 0.5)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private var emptyView: some View {
+        VStack(spacing: 4) {
+            Text("NO EVENTS")
+                .font(.caption)
+                .tracking(4)
+                .foregroundStyle(.secondary)
+            Text("Add events in TallyDays")
+                .font(.system(size: 8))
+                .foregroundStyle(.tertiary)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
 }
 
-private func unitString(for event: TimeMarkEventEntity?) -> String {
-    guard let event else { return "days" }
-    let unit = widgetFormat(event: event).unit
-    return unit.isEmpty ? "" : unit
+// MARK: - Large Widget
+
+struct LargeWidgetView: View {
+    let entry: MultiEventEntry
+
+    var body: some View {
+        if entry.events.isEmpty {
+            emptyView
+        } else {
+            VStack(alignment: .leading, spacing: 0) {
+                Text("TALLYDAYS")
+                    .font(.system(size: 8))
+                    .tracking(3)
+                    .foregroundStyle(.secondary)
+                    .padding(.bottom, 4)
+
+                Rectangle()
+                    .fill(WidgetTheme.current.muted)
+                    .frame(height: 0.5)
+                    .padding(.bottom, 4)
+
+                VStack(spacing: 0) {
+                    ForEach(Array(entry.events.prefix(5).enumerated()), id: \.element.id) { index, event in
+                        Link(destination: URL(string: "tallydays://event/\(event.id.uuidString)")!) {
+                            WidgetEventRow(event: event, compact: true)
+                                .padding(.vertical, 6)
+                        }
+                        if index < min(entry.events.count, 5) - 1 {
+                            Rectangle()
+                                .fill(WidgetTheme.current.muted.opacity(0.3))
+                                .frame(height: 0.5)
+                        }
+                    }
+                }
+
+                Spacer(minLength: 0)
+            }
+        }
+    }
+
+    private var emptyView: some View {
+        VStack(spacing: 4) {
+            Text("NO EVENTS")
+                .font(.caption)
+                .tracking(4)
+                .foregroundStyle(.secondary)
+            Text("Add events in TallyDays")
+                .font(.system(size: 8))
+                .foregroundStyle(.tertiary)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
 }
 
-private func eventAccentColor(for event: TimeMarkEventEntity?) -> Color {
-    if let hex = event?.categoryColorHex {
+// MARK: - Extra Large Widget (iPad)
+
+struct ExtraLargeWidgetView: View {
+    let entry: MultiEventEntry
+
+    private let columns = [GridItem(.flexible()), GridItem(.flexible())]
+
+    var body: some View {
+        if entry.events.isEmpty {
+            emptyView
+        } else {
+            VStack(alignment: .leading, spacing: 0) {
+                Text("TALLYDAYS")
+                    .font(.system(size: 8))
+                    .tracking(3)
+                    .foregroundStyle(.secondary)
+                    .padding(.bottom, 6)
+
+                Rectangle()
+                    .fill(WidgetTheme.current.muted)
+                    .frame(height: 0.5)
+                    .padding(.bottom, 8)
+
+                LazyVGrid(columns: columns, spacing: 8) {
+                    ForEach(Array(entry.events.prefix(8)), id: \.id) { event in
+                        Link(destination: URL(string: "tallydays://event/\(event.id.uuidString)")!) {
+                            ExtraLargeEventCell(event: event)
+                        }
+                    }
+                }
+
+                Spacer(minLength: 0)
+            }
+        }
+    }
+
+    private var emptyView: some View {
+        VStack(spacing: 4) {
+            Text("NO EVENTS")
+                .font(.caption)
+                .tracking(4)
+                .foregroundStyle(.secondary)
+            Text("Add events in TallyDays")
+                .font(.system(size: 8))
+                .foregroundStyle(.tertiary)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+private struct ExtraLargeEventCell: View {
+    let event: TallyDaysEventEntity
+
+    var body: some View {
+        HStack(spacing: 0) {
+            RoundedRectangle(cornerRadius: 1)
+                .fill(categoryColor(for: event))
+                .frame(width: 2)
+                .padding(.vertical, 4)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(event.title)
+                    .font(.caption.weight(.medium))
+                    .lineLimit(1)
+                if let catName = event.categoryName {
+                    Text(catName.uppercased())
+                        .font(.system(size: 7))
+                        .tracking(1)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .padding(.leading, 8)
+
+            Spacer()
+
+            let formatted = widgetFormat(event: event)
+            VStack(alignment: .trailing, spacing: 0) {
+                Text(formatted.value)
+                    .font(.system(size: 20, weight: .ultraLight, design: .monospaced))
+                    .monospacedDigit()
+                if !formatted.unit.isEmpty {
+                    Text(formatted.unit.uppercased())
+                        .font(.system(size: 7))
+                        .tracking(1.5)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 6)
+    }
+}
+
+// MARK: - Circular Lock Screen Widget
+
+struct CircularWidgetView: View {
+    let entry: SingleEventEntry
+
+    var body: some View {
+        ZStack {
+            AccessoryWidgetBackground()
+
+            if let event = entry.event {
+                let days = dayCount(for: event)
+                Text("\(days)")
+                    .font(.system(size: 20, weight: .light, design: .monospaced))
+                    .monospacedDigit()
+                    .widgetAccentable()
+                    .privacySensitive()
+            } else {
+                Text("—")
+                    .font(.system(size: 20, weight: .light, design: .monospaced))
+            }
+        }
+    }
+}
+
+// MARK: - Rectangular Lock Screen Widget
+
+struct RectangularWidgetView: View {
+    let entry: SingleEventEntry
+
+    var body: some View {
+        if let event = entry.event {
+            let days = dayCount(for: event)
+            let label = event.eventTypeRaw == EventType.since.rawValue ? "DAYS SINCE" : "DAYS UNTIL"
+
+            VStack(alignment: .leading, spacing: 2) {
+                HStack {
+                    Text(event.title)
+                        .font(.caption.weight(.medium))
+                        .lineLimit(1)
+                    Spacer()
+                    Text("\(days)")
+                        .font(.system(size: 20, weight: .light, design: .monospaced))
+                        .monospacedDigit()
+                        .widgetAccentable()
+                }
+                Text(label)
+                    .font(.system(size: 8))
+                    .tracking(1.5)
+                    .foregroundStyle(.secondary)
+            }
+            .privacySensitive()
+            .frame(maxWidth: .infinity, alignment: .leading)
+        } else {
+            VStack(alignment: .leading, spacing: 2) {
+                Text("TallyDays")
+                    .font(.caption.weight(.medium))
+                Text("NO EVENT SELECTED")
+                    .font(.system(size: 8))
+                    .tracking(1.5)
+                    .foregroundStyle(.secondary)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+}
+
+// MARK: - Inline Lock Screen Widget
+
+struct InlineWidgetView: View {
+    let entry: SingleEventEntry
+
+    var body: some View {
+        if let event = entry.event {
+            let days = dayCount(for: event)
+            let unit = days == 1 ? "day" : "days"
+            Text("\(Image(systemName: "clock")) \(event.title): \(days) \(unit)")
+        } else {
+            Text("TallyDays")
+        }
+    }
+}
+
+// MARK: - Reusable Row
+
+struct WidgetEventRow: View {
+    let event: TallyDaysEventEntity
+    let compact: Bool
+
+    var body: some View {
+        let formatted = widgetFormat(event: event)
+
+        HStack(spacing: 0) {
+            RoundedRectangle(cornerRadius: 1)
+                .fill(categoryColor(for: event))
+                .frame(width: 2)
+                .padding(.vertical, compact ? 2 : 4)
+
+            VStack(alignment: .leading, spacing: 1) {
+                Text(event.title)
+                    .font(.caption.weight(.medium))
+                    .lineLimit(1)
+
+                if !compact, let catName = event.categoryName {
+                    Text(catName.uppercased())
+                        .font(.system(size: 8))
+                        .tracking(1)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .padding(.leading, 8)
+
+            Spacer()
+
+            VStack(alignment: .trailing, spacing: 0) {
+                Text(formatted.value)
+                    .font(.system(size: compact ? 20 : 24, weight: .ultraLight, design: .monospaced))
+                    .monospacedDigit()
+
+                if !formatted.unit.isEmpty {
+                    Text(formatted.unit.uppercased())
+                        .font(.system(size: 7))
+                        .tracking(1.5)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Helpers
+
+private func dayCount(for event: TallyDaysEventEntity) -> Int {
+    let now = Calendar.current.startOfDay(for: Date())
+    let eventDay = Calendar.current.startOfDay(for: event.eventDate)
+    if event.eventTypeRaw == EventType.since.rawValue {
+        return max(0, Calendar.current.dateComponents([.day], from: eventDay, to: now).day ?? 0)
+    } else {
+        return max(0, Calendar.current.dateComponents([.day], from: now, to: eventDay).day ?? 0)
+    }
+}
+
+private func categoryColor(for event: TallyDaysEventEntity) -> Color {
+    if let hex = event.categoryColorHex {
         return Color(hex: hex)
     }
-    return .primary
+    return WidgetTheme.current.accent
 }
 
-private func widgetFormat(event: TimeMarkEventEntity) -> (value: String, unit: String) {
+private func widgetFormat(event: TallyDaysEventEntity) -> (value: String, unit: String) {
     let type = WidgetEventType(rawValue: event.eventTypeRaw) ?? .since
     let format = WidgetDisplayFormat(rawValue: event.displayFormatRaw) ?? .auto
     return WidgetTimeFormatter.format(from: event.eventDate, type: type, format: format)
 }
 
-enum WidgetEventType: String {
+private enum WidgetEventType: String {
     case since = "Time Since"
     case until = "Time Until"
 }
 
-enum WidgetDisplayFormat: String {
+private enum WidgetDisplayFormat: String {
     case days
     case weeks
     case months
@@ -221,7 +482,7 @@ enum WidgetDisplayFormat: String {
     case auto
 }
 
-enum WidgetTimeFormatter {
+private enum WidgetTimeFormatter {
     static func format(
         from date: Date,
         type: WidgetEventType,
@@ -245,8 +506,8 @@ enum WidgetTimeFormatter {
         case .days:
             return ("\(totalDays)", totalDays == 1 ? "day" : "days")
         case .weeks:
-            let weeks = totalDays / 7
-            return ("\(weeks)", weeks == 1 ? "week" : "weeks")
+            let w = totalDays / 7
+            return ("\(w)", w == 1 ? "week" : "weeks")
         case .months:
             let m = Calendar.current.dateComponents([.month], from: earlier, to: later).month ?? 0
             return ("\(m)", m == 1 ? "month" : "months")

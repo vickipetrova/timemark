@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import WidgetKit
 
 extension Notification.Name {
     static let createEvent = Notification.Name("createEvent")
@@ -8,14 +9,19 @@ extension Notification.Name {
 }
 
 @main
-struct timemarkApp: App {
-    @AppStorage("selectedTheme") private var selectedThemeRaw: String = AppTheme.monochrome.rawValue
+struct tallydaysApp: App {
+    @AppStorage("selectedTheme", store: UserDefaults(suiteName: SharedModelContainer.appGroupID))
+    private var selectedThemeRaw: String = AppTheme.monochrome.rawValue
 
     let modelContainer: ModelContainer
 
     init() {
         let schema = Schema([TrackedEvent.self, EventCategory.self])
-        let config = ModelConfiguration(schema: schema, cloudKitDatabase: .automatic)
+        let config = ModelConfiguration(
+            schema: schema,
+            url: SharedModelContainer.containerURL,
+            cloudKitDatabase: .automatic
+        )
         do {
             modelContainer = try ModelContainer(for: schema, configurations: config)
         } catch {

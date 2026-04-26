@@ -57,11 +57,20 @@
 			membershipExceptions = (
 				"Extensions/Color+Hex.swift",
 				"Extensions/Date+Helpers.swift",
+				Models/AppTheme.swift,
 				Models/Enums.swift,
 				Models/EventCategory.swift,
+				Models/SharedModelContainer.swift,
 				Models/TrackedEvent.swift,
 			);
 			target = D4AD94AA2F9E6FC600C7F54F /* TimeMarkWidgetsExtensionExtension */;
+		};
+		D4C23A972F9EB601004F7066 /* Exceptions for "timemark" folder in "timemark" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = D4AD93F82F958A1A00C7F54F /* timemark */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -69,6 +78,7 @@
 		D4AD93FB2F958A1A00C7F54F /* timemark */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
+				D4C23A972F9EB601004F7066 /* Exceptions for "timemark" folder in "timemark" target */,
 				D4AD94C42F9E6FED00C7F54F /* Exceptions for "timemark" folder in "TimeMarkWidgetsExtensionExtension" target */,
 			);
 			path = timemark;
@@ -395,6 +405,7 @@
 				DEVELOPMENT_TEAM = ZD94VQJW2K;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = timemark/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = TimeMark;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -406,7 +417,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = vickipetrova.timemark;
+				PRODUCT_BUNDLE_IDENTIFIER = vickipetrova.tallydays;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -429,6 +440,7 @@
 				DEVELOPMENT_TEAM = ZD94VQJW2K;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = timemark/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = TimeMark;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -440,7 +452,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = vickipetrova.timemark;
+				PRODUCT_BUNDLE_IDENTIFIER = vickipetrova.tallydays;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -471,7 +483,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = vickipetrova.timemark.TimeMarkWidgetsExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = vickipetrova.tallydays.TimeMarkWidgetsExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -502,7 +514,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = vickipetrova.timemark.TimeMarkWidgetsExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = vickipetrova.tallydays.TimeMarkWidgetsExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;

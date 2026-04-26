@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import WidgetKit
 
 struct CreateCategoryView: View {
     enum Mode {
@@ -115,6 +116,7 @@ struct CreateCategoryView: View {
                         Button {
                             modelContext.delete(category)
                             try? modelContext.save()
+                            WidgetCenter.shared.reloadAllTimelines()
                             dismiss()
                         } label: {
                             Text("Delete Category")
@@ -186,6 +188,7 @@ struct CreateCategoryView: View {
             category.colorHex = selectedHex
         }
         try? modelContext.save()
+        WidgetCenter.shared.reloadAllTimelines()
         HapticManager.success()
         dismiss()
     }

@@ -11,6 +11,9 @@ xcuserdata/
 *.dSYM.zip
 *.dSYM
 
+# Ruby (fastlane) — local gems
+vendor/bundle/
+
 # Swift Package Manager
 .build/
 Packages/
@@ -28,5 +31,12 @@ Pods/
 
 # Secrets / env
 .env
+fastlane/.env
 *.xcconfig
 !*.shared.xcconfig
+
+# fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+**/*.p8

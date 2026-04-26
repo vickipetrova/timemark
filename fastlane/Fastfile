@@ -1,0 +1,32 @@
+# frozen_string_literal: true
+
+opt_out_usage
+
+default_platform(:ios)
+
+# Uploads text metadata from `fastlane/metadata/**` to App Store Connect.
+# Auth: set APP_STORE_CONNECT_KEY_ID, APP_STORE_CONNECT_ISSUER_ID, and
+# APP_STORE_CONNECT_KEY_PATH (path to the .p8), or use Apple ID session via
+# `fastlane spaceauth` and FASTLANE_SESSION / creds in Keychain.
+desc "Upload App Store metadata only (no IPA, no screenshots, no auto-submit)"
+lane :metadata do
+  # app_identifier and Apple ID (if any) come from `Appfile` / environment.
+  options = {
+    skip_binary_upload: true,
+    skip_screenshots: true,
+    submit_for_review: false,
+  }
+
+  if ENV["APP_STORE_CONNECT_KEY_ID"] &&
+     ENV["APP_STORE_CONNECT_ISSUER_ID"] &&
+     ENV["APP_STORE_CONNECT_KEY_PATH"]
+    key_path = File.expand_path(ENV["APP_STORE_CONNECT_KEY_PATH"], Dir.pwd)
+    options[:api_key] = app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
+      key_filepath: key_path
+    )
+  end
+
+  deliver(options)
+end

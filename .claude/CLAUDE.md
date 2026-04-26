@@ -19,6 +19,10 @@ xcodebuild -project timemark.xcodeproj -scheme timemark \
 
 This is the authoritative source of truth — **SourceKit diagnostics in this project are extremely noisy and usually wrong**. A cascade of "Cannot find type 'X' in scope" will appear for almost every file after you add a new one, but `xcodebuild` will happily report `BUILD SUCCEEDED`. Always confirm with a real build before chasing a SourceKit error.
 
+**App Store metadata (fastlane `deliver`):** Use Homebrew Ruby so Bundler can install native gems: `export PATH="/opt/homebrew/opt/ruby/bin:$PATH"`, then from the repo root run `bundle install` once, and `bundle exec fastlane metadata` to upload [fastlane/metadata](fastlane/metadata) (no binary). Set `APP_STORE_CONNECT_KEY_ID`, `APP_STORE_CONNECT_ISSUER_ID`, and `APP_STORE_CONNECT_KEY_PATH` to a `.p8` API key, or rely on an interactive App Store Connect login. Localizations live under `metadata/<locale>/` (13 languages); **primary/secondary app categories** are in [fastlane/metadata/default](fastlane/metadata/default) (Utilities, Lifestyle). Arabic uses folder `ar-SA`. Screenshot caption ideas for marketing assets: [fastlane/aso_screenshot_captions.txt](fastlane/aso_screenshot_captions.txt) (not consumed by `deliver`).
+
+**Character limits (App Store):** `name` and `subtitle` are 30 characters per locale. If `deliver` or App Store Connect reject a string, trim or abbreviate; some entries in the source copy run one character over—shorten and re-upload.
+
 ## Project-specific gotchas
 
 - **`MemberImportVisibility` is on** (`SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES`). Transitive imports do not leak members — if you use `UIColor`, `UIImpactFeedbackGenerator`, etc., you must `import UIKit` explicitly, even though `import SwiftUI` seems to pull it in. SourceKit sometimes reports `No such module 'UIKit'` as a false positive; the build succeeds.

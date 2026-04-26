@@ -1,0 +1,10 @@
+# App Store Connect: TimeMark (bundle id from Xcode)
+app_identifier("vickipetrova.timemark")
+
+# Optional: Apple ID for interactive `deliver` (when not using an API key).
+# Prefer setting FASTLANE_USER / FASTLANE_APPLE_ID in the environment instead of
+# hardcoding. Uncomment if you want a local default:
+apple_id("vickipetrova@icloud.com")
+
+# If you have multiple App Store Connect teams, set in env:
+# FASTLANE_ITC_TEAM_ID=...

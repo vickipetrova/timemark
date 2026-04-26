@@ -68,7 +68,7 @@ struct SidebarView: View {
         .navigationTitle("")
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                Text("TIMEMARK")
+                Text("TALLY DAYS")
                     .font(.caption.weight(.medium))
                     .tracking(4)
                     .foregroundStyle(AppTheme.foreground(for: colorScheme))

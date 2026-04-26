@@ -8,7 +8,7 @@ struct SharedEventPayload: Codable {
 }
 
 enum ShareManager {
-    static let urlScheme = "timemark"
+    static let urlScheme = "tallydays"
     static let urlHost = "import"
 
     static func makeShareURL(for event: TrackedEvent) -> URL? {
@@ -43,9 +43,9 @@ enum ShareManager {
             : "\(formatted.value) \(formatted.unit)"
         switch event.eventType {
         case .since:
-            return "I've been tracking '\(event.title)' for \(time) using TimeMark."
+            return "I've been tracking '\(event.title)' for \(time) using TallyDays."
         case .until:
-            return "Tracking \(time) until '\(event.title)' with TimeMark."
+            return "Tracking \(time) until '\(event.title)' with TallyDays."
         }
     }
 

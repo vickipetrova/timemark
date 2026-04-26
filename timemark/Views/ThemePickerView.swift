@@ -1,7 +1,9 @@
 import SwiftUI
+import WidgetKit
 
 struct ThemePickerView: View {
-    @AppStorage("selectedTheme") private var selectedThemeRaw: String = AppTheme.monochrome.rawValue
+    @AppStorage("selectedTheme", store: UserDefaults(suiteName: SharedModelContainer.appGroupID))
+    private var selectedThemeRaw: String = AppTheme.monochrome.rawValue
     @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
@@ -9,6 +11,7 @@ struct ThemePickerView: View {
             ForEach(AppTheme.allCases) { theme in
                 Button {
                     selectedThemeRaw = theme.rawValue
+                    WidgetCenter.shared.reloadAllTimelines()
                     HapticManager.light()
                 } label: {
                     Group {
