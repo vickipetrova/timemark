@@ -31,7 +31,7 @@ private struct SmallTimeMarkView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             Rectangle()
-                .fill(accentColor(for: entry.event))
+                .fill(eventAccentColor(for: entry.event))
                 .frame(height: 3)
 
             Spacer()
@@ -44,7 +44,7 @@ private struct SmallTimeMarkView: View {
 
             HStack(alignment: .firstTextBaseline, spacing: 4) {
                 Text(valueString(for: entry.event))
-                    .font(.system(.largeTitle, design: .rounded).weight(.heavy))
+                    .font(.system(.largeTitle, design: .monospaced).weight(.ultraLight))
                     .monospacedDigit()
                     .minimumScaleFactor(0.5)
                     .lineLimit(1)
@@ -79,7 +79,7 @@ private struct MediumTimeMarkView: View {
     private func row(event: TimeMarkEventEntity) -> some View {
         HStack {
             Rectangle()
-                .fill(accentColor(for: event))
+                .fill(eventAccentColor(for: event))
                 .frame(width: 3, height: 28)
             Text(event.title)
                 .font(.callout.weight(.semibold))
@@ -87,7 +87,7 @@ private struct MediumTimeMarkView: View {
             Spacer()
             HStack(alignment: .firstTextBaseline, spacing: 3) {
                 Text(valueString(for: event))
-                    .font(.title3.weight(.heavy))
+                    .font(.system(.title3, design: .monospaced).weight(.ultraLight))
                     .monospacedDigit()
                 Text(unitString(for: event))
                     .font(.caption2)
@@ -105,7 +105,7 @@ private struct LargeTimeMarkView: View {
             ForEach(events.prefix(5), id: \.id) { event in
                 HStack {
                     Rectangle()
-                        .fill(accentColor(for: event))
+                        .fill(eventAccentColor(for: event))
                         .frame(width: 3, height: 36)
                     VStack(alignment: .leading, spacing: 2) {
                         Text(event.title)
@@ -118,7 +118,7 @@ private struct LargeTimeMarkView: View {
                     Spacer()
                     HStack(alignment: .firstTextBaseline, spacing: 3) {
                         Text(valueString(for: event))
-                            .font(.title2.weight(.heavy))
+                            .font(.system(.title2, design: .monospaced).weight(.ultraLight))
                             .monospacedDigit()
                         Text(unitString(for: event))
                             .font(.caption2)
@@ -144,7 +144,7 @@ private struct CircularAccessoryView: View {
     var body: some View {
         VStack(spacing: 0) {
             Text(valueString(for: entry.event))
-                .font(.system(.title3, design: .rounded).weight(.heavy))
+                .font(.system(.title3, design: .monospaced).weight(.ultraLight))
                 .monospacedDigit()
             Text(unitString(for: entry.event))
                 .font(.system(size: 8, weight: .semibold))
@@ -162,7 +162,7 @@ private struct RectangularAccessoryView: View {
                 .lineLimit(1)
             HStack(alignment: .firstTextBaseline, spacing: 2) {
                 Text(valueString(for: entry.event))
-                    .font(.title3.weight(.heavy))
+                    .font(.system(.title3, design: .monospaced).weight(.ultraLight))
                     .monospacedDigit()
                 Text(unitString(for: entry.event))
                     .font(.caption2)
@@ -195,7 +195,7 @@ private func unitString(for event: TimeMarkEventEntity?) -> String {
     return unit.isEmpty ? "" : unit
 }
 
-private func accentColor(for event: TimeMarkEventEntity?) -> Color {
+private func eventAccentColor(for event: TimeMarkEventEntity?) -> Color {
     if let hex = event?.categoryColorHex {
         return Color(hex: hex)
     }

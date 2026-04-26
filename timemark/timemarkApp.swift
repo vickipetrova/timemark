@@ -1,6 +1,12 @@
 import SwiftUI
 import SwiftData
 
+extension Notification.Name {
+    static let createEvent = Notification.Name("createEvent")
+    static let createCategory = Notification.Name("createCategory")
+    static let openSettings = Notification.Name("openSettings")
+}
+
 @main
 struct timemarkApp: App {
     @AppStorage("selectedTheme") private var selectedThemeRaw: String = AppTheme.monochrome.rawValue
@@ -31,6 +37,26 @@ struct timemarkApp: App {
                 .task { _ = await ReminderManager.shared.requestPermissionIfNeeded() }
         }
         .modelContainer(modelContainer)
+        .defaultSize(width: 1100, height: 700)
+        .commands {
+            CommandGroup(after: .newItem) {
+                Button("New Event") {
+                    NotificationCenter.default.post(name: .createEvent, object: nil)
+                }
+                .keyboardShortcut("n", modifiers: .command)
+
+                Button("New Category") {
+                    NotificationCenter.default.post(name: .createCategory, object: nil)
+                }
+                .keyboardShortcut("k", modifiers: .command)
+            }
+            CommandGroup(replacing: .appSettings) {
+                Button("Settings...") {
+                    NotificationCenter.default.post(name: .openSettings, object: nil)
+                }
+                .keyboardShortcut(",", modifiers: .command)
+            }
+        }
     }
 
     @MainActor

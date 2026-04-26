@@ -4,9 +4,12 @@ import SwiftData
 struct EventCardView: View {
     let event: TrackedEvent
     let category: EventCategory?
+    var isSelected: Bool = false
+    var useGridLayout: Bool = false
 
     @Environment(\.appTheme) private var theme
     @Environment(\.colorScheme) private var colorScheme
+    @State private var isHovered = false
 
     var body: some View {
         let formatted = TimeFormatter.format(
@@ -68,12 +71,19 @@ struct EventCardView: View {
         }
         .padding(.vertical, 16)
         .padding(.horizontal, 20)
-        .background(Color.clear)
+        .frame(minHeight: useGridLayout ? 100 : 0)
+        .background(isSelected ? theme.accentColor.opacity(0.06) : Color.clear)
         .overlay(
             RoundedRectangle(cornerRadius: 4)
-                .stroke(theme.mutedColor, lineWidth: 1)
+                .stroke(
+                    isSelected ? theme.accentColor : (isHovered ? theme.accentColor : theme.mutedColor),
+                    lineWidth: 1
+                )
         )
         .contentShape(Rectangle())
+        .onHover { hovering in
+            isHovered = hovering
+        }
         .accessibilityElement(children: .combine)
         .accessibilityLabel(Text(event.title))
         .accessibilityValue(Text("\(formatted.value) \(formatted.unit)"))

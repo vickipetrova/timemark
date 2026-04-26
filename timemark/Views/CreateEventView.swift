@@ -147,7 +147,8 @@ struct CreateEventView: View {
                         .foregroundStyle(AppTheme.foreground(for: colorScheme))
                 }
             }
-            .presentationDetents([.large])
+            .presentationDetents([.medium, .large])
+            .presentationDragIndicator(.visible)
             .onAppear(perform: loadDefaults)
             .confirmationDialog(
                 "Delete this event?",

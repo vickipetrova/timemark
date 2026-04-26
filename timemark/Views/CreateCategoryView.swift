@@ -136,7 +136,8 @@ struct CreateCategoryView: View {
                         .foregroundStyle(AppTheme.foreground(for: colorScheme))
                 }
             }
-            .presentationDetents([.large])
+            .presentationDetents([.medium, .large])
+            .presentationDragIndicator(.visible)
             .onAppear(perform: loadIfEditing)
         }
     }

@@ -3,6 +3,7 @@ import SwiftData
 
 struct EventDetailView: View {
     @Bindable var event: TrackedEvent
+    var isInDetailColumn: Bool = false
 
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
@@ -27,7 +28,7 @@ struct EventDetailView: View {
 
                 VStack(spacing: 8) {
                     Text(formatted.value)
-                        .font(.system(size: 72, weight: .ultraLight, design: .monospaced))
+                        .font(.system(size: isInDetailColumn ? 96 : 72, weight: .ultraLight, design: .monospaced))
                         .minimumScaleFactor(0.5)
                         .lineLimit(1)
                         .foregroundStyle(AppTheme.foreground(for: colorScheme))
@@ -59,31 +60,56 @@ struct EventDetailView: View {
         }
         .background(AppTheme.background(for: colorScheme))
         .foregroundStyle(AppTheme.foreground(for: colorScheme))
-        .navigationTitle(event.title)
+        .navigationTitle(isInDetailColumn ? "" : event.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Menu {
-                    Button { showingEdit = true } label: {
-                        Label("Edit", systemImage: "pencil")
-                    }
-                    Button { showingShare = true } label: {
-                        Label("Share", systemImage: "square.and.arrow.up")
-                    }
-                    Button(role: .destructive) {
-                        showingDelete = true
+            if isInDetailColumn {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        showingEdit = true
                     } label: {
-                        Label("Delete", systemImage: "trash")
+                        Text("EDIT")
+                            .font(.caption.weight(.medium))
+                            .tracking(2)
+                            .foregroundStyle(AppTheme.foreground(for: colorScheme))
                     }
-                } label: {
-                    Image(systemName: "ellipsis")
-                        .fontWeight(.thin)
-                        .foregroundStyle(AppTheme.foreground(for: colorScheme))
+                    .keyboardShortcut("e", modifiers: .command)
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        showingShare = true
+                    } label: {
+                        Image(systemName: "square.and.arrow.up")
+                            .fontWeight(.thin)
+                            .foregroundStyle(AppTheme.foreground(for: colorScheme))
+                    }
+                }
+            } else {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Menu {
+                        Button { showingEdit = true } label: {
+                            Label("Edit", systemImage: "pencil")
+                        }
+                        Button { showingShare = true } label: {
+                            Label("Share", systemImage: "square.and.arrow.up")
+                        }
+                        Button(role: .destructive) {
+                            showingDelete = true
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    } label: {
+                        Image(systemName: "ellipsis")
+                            .fontWeight(.thin)
+                            .foregroundStyle(AppTheme.foreground(for: colorScheme))
+                    }
                 }
             }
         }
         .sheet(isPresented: $showingEdit) {
             CreateEventView(mode: .edit(event))
+                .presentationDetents(isInDetailColumn ? [.medium, .large] : [.large])
+                .presentationDragIndicator(isInDetailColumn ? .visible : .hidden)
         }
         .sheet(isPresented: $showingShare) {
             ShareSheet(activityItems: shareItems)
