@@ -6,6 +6,7 @@ struct SplitMainView: View {
     @Environment(\.appTheme) private var theme
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.layoutTier) private var layoutTier
+    @Environment(ReviewManager.self) private var reviewManager
 
     @Query private var allEvents: [TrackedEvent]
     @Query(sort: \EventCategory.sortOrder) private var categories: [EventCategory]
@@ -123,6 +124,7 @@ struct SplitMainView: View {
                                     viewModel.resetEvent(event)
                                     try? modelContext.save()
                                     HapticManager.medium()
+                                    reviewManager.recordMeaningfulAction()
                                 } label: {
                                     Label("Log Now", systemImage: "arrow.counterclockwise")
                                 }

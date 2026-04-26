@@ -10,6 +10,7 @@ struct EventDetailView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.appTheme) private var theme
     @Environment(\.colorScheme) private var colorScheme
+    @Environment(ReviewManager.self) private var reviewManager
     @Query(sort: \EventCategory.sortOrder) private var categories: [EventCategory]
 
     @State private var showingEdit = false
@@ -270,6 +271,7 @@ struct EventDetailView: View {
         try? modelContext.save()
         WidgetCenter.shared.reloadAllTimelines()
         HapticManager.medium()
+        reviewManager.recordMeaningfulAction()
     }
 
     private func deleteHistory(at index: Int) {

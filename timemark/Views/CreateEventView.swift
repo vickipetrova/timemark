@@ -15,6 +15,7 @@ struct CreateEventView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.appTheme) private var theme
+    @Environment(ReviewManager.self) private var reviewManager
     @Query(sort: \EventCategory.sortOrder) private var categories: [EventCategory]
 
     @State private var title: String = ""
@@ -225,6 +226,7 @@ struct CreateEventView: View {
             modelContext.insert(event)
             try? modelContext.save()
             Task { await ReminderManager.shared.scheduleReminder(for: event) }
+            reviewManager.recordMeaningfulAction()
 
         case .edit(let event):
             event.title = trimmed

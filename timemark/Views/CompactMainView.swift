@@ -12,6 +12,7 @@ struct CompactMainView: View {
 
     @AppStorage("sortOrder") private var sortOrderRaw: String = EventSortOrder.dateCreated.rawValue
 
+    @Environment(ReviewManager.self) private var reviewManager
     @State private var viewModel = EventsViewModel()
     @State private var selectedCategoryID: UUID?
     @State private var showingCreateEvent = false
@@ -205,6 +206,7 @@ struct CompactMainView: View {
                 viewModel.resetEvent(event)
                 try? modelContext.save()
                 HapticManager.medium()
+                reviewManager.recordMeaningfulAction()
             } label: {
                 Label("Log Now", systemImage: "arrow.counterclockwise")
             }
@@ -232,6 +234,7 @@ struct CompactMainView: View {
                 viewModel.resetEvent(event)
                 try? modelContext.save()
                 HapticManager.medium()
+                reviewManager.recordMeaningfulAction()
             } label: {
                 Text("RESET")
             }

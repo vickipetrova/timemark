@@ -1,26 +1,37 @@
-//
-//  ReviewManager.swift
-//  timemark
-//
-//  Created by Victoria Petrova on 26/04/2026.
-//
-
 import Foundation
 import StoreKit
 import SwiftUI
 import UIKit
-import Combine
 
-class ReviewManager: ObservableObject {
+@MainActor
+@Observable
+final class ReviewManager {
 
-    @AppStorage("latestVersionThatReviewWasAskedFor") var latestVersionThatReviewWasAskedFor: String = "1.0"
+    @ObservationIgnored @AppStorage("latestVersionThatReviewWasAskedFor")
+    private var latestVersionThatReviewWasAskedFor: String = "1.0"
 
-    func promptReviewAlert() {
+    @ObservationIgnored @AppStorage("meaningfulActionCount")
+    private var meaningfulActionCount: Int = 0
+
+    private static let actionsBeforePrompt = 3
+
+    func recordMeaningfulAction() {
+        meaningfulActionCount += 1
+        promptIfReady()
+    }
+
+    func promptReview() {
+        requestReviewIfNewVersion()
+    }
+
+    private func promptIfReady() {
+        guard meaningfulActionCount >= Self.actionsBeforePrompt else { return }
+        requestReviewIfNewVersion()
+    }
+
+    private func requestReviewIfNewVersion() {
         let currentVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
-
-        if currentVersion == latestVersionThatReviewWasAskedFor {
-            return
-        }
+        guard currentVersion != latestVersionThatReviewWasAskedFor else { return }
 
         if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
             AppStore.requestReview(in: scene)

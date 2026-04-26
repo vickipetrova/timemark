@@ -3,6 +3,7 @@ import SwiftUI
 struct OnboardingFinalPage: View {
     @Environment(\.appTheme) private var theme
     @Environment(\.colorScheme) private var colorScheme
+    @Environment(ReviewManager.self) private var reviewManager
     @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding: Bool = false
 
     var body: some View {
@@ -54,6 +55,7 @@ struct OnboardingFinalPage: View {
     private func finish() {
         HapticManager.light()
         hasSeenOnboarding = true
+        reviewManager.promptReview()
     }
 }
 

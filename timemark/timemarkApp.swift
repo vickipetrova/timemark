@@ -13,6 +13,7 @@ struct tallydaysApp: App {
     @AppStorage("selectedTheme", store: UserDefaults(suiteName: SharedModelContainer.appGroupID))
     private var selectedThemeRaw: String = AppTheme.monochrome.rawValue
 
+    @State private var reviewManager = ReviewManager()
     let modelContainer: ModelContainer
 
     init() {
@@ -38,6 +39,7 @@ struct tallydaysApp: App {
         WindowGroup {
             MainView()
                 .environment(\.appTheme, AppTheme(rawValue: selectedThemeRaw) ?? .monochrome)
+                .environment(reviewManager)
                 .tint(AppTheme(rawValue: selectedThemeRaw)?.accent ?? AppTheme.monochrome.accent)
                 .task { await seedDefaultCategoriesIfNeeded() }
                 .task { _ = await ReminderManager.shared.requestPermissionIfNeeded() }
