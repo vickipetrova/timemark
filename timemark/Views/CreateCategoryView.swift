@@ -32,7 +32,7 @@ struct CreateCategoryView: View {
                                 .font(.body)
                                 .padding(.vertical, 8)
                             Rectangle()
-                                .fill(theme.mutedColor)
+                                .fill(theme.mutedColor(for: colorScheme))
                                 .frame(height: 1)
                         }
                     }
@@ -49,14 +49,14 @@ struct CreateCategoryView: View {
                                         .frame(width: 40, height: 40)
                                         .foregroundStyle(
                                             selectedSymbol == symbol
-                                                ? theme.accentColor
+                                                ? theme.accentColor(for: colorScheme)
                                                 : AppTheme.foreground(for: colorScheme).opacity(0.6)
                                         )
                                         .overlay(
                                             RoundedRectangle(cornerRadius: 4)
                                                 .stroke(
                                                     selectedSymbol == symbol
-                                                        ? theme.accentColor
+                                                        ? theme.accentColor(for: colorScheme)
                                                         : Color.clear,
                                                     lineWidth: 1
                                                 )
@@ -84,7 +84,7 @@ struct CreateCategoryView: View {
                                             )
                                         if selectedHex == hex {
                                             RoundedRectangle(cornerRadius: 4)
-                                                .stroke(theme.accentColor, lineWidth: 1)
+                                                .stroke(theme.accentColor(for: colorScheme), lineWidth: 1)
                                                 .frame(width: 22, height: 22)
                                         }
                                     }
@@ -100,12 +100,12 @@ struct CreateCategoryView: View {
                         Text("SAVE")
                             .font(.caption.weight(.medium))
                             .tracking(2)
-                            .foregroundStyle(theme.accentColor)
+                            .foregroundStyle(theme.accentColor(for: colorScheme))
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 14)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 4)
-                                    .stroke(theme.accentColor, lineWidth: 1)
+                                    .stroke(theme.accentColor(for: colorScheme), lineWidth: 1)
                             )
                     }
                     .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)

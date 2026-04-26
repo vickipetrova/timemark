@@ -38,7 +38,7 @@ struct CreateEventView: View {
                                 .font(.body)
                                 .padding(.vertical, 8)
                             Rectangle()
-                                .fill(theme.mutedColor)
+                                .fill(theme.mutedColor(for: colorScheme))
                                 .frame(height: 1)
                         }
                     }
@@ -113,12 +113,12 @@ struct CreateEventView: View {
                         Text("SAVE")
                             .font(.caption.weight(.medium))
                             .tracking(2)
-                            .foregroundStyle(theme.accentColor)
+                            .foregroundStyle(theme.accentColor(for: colorScheme))
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 14)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 4)
-                                    .stroke(theme.accentColor, lineWidth: 1)
+                                    .stroke(theme.accentColor(for: colorScheme), lineWidth: 1)
                             )
                     }
                     .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)

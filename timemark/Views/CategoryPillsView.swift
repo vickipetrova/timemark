@@ -57,6 +57,11 @@ struct CategoryPillsView: View {
     ) -> some View {
         let isSelected = selectedCategoryID == id
         let muted = AppTheme.mutedForeground(for: colorScheme)
+        let categoryColor: Color? = {
+            guard theme.isSpectrum, let id else { return nil }
+            return categories.first(where: { $0.id == id })?.color
+        }()
+        let pillAccent = categoryColor ?? theme.accentColor(for: colorScheme)
 
         Button {
             withAnimation(.easeInOut(duration: 0.2)) {
@@ -76,16 +81,16 @@ struct CategoryPillsView: View {
                         .baselineOffset(4)
                 }
             }
-            .foregroundStyle(isSelected ? theme.accentColor : muted)
+            .foregroundStyle(isSelected ? pillAccent : (categoryColor != nil ? categoryColor!.opacity(0.7) : muted))
             .padding(.horizontal, 10)
             .frame(height: 28)
             .background(
                 RoundedRectangle(cornerRadius: 4)
-                    .fill(isSelected ? theme.accentColor.opacity(0.1) : Color.clear)
+                    .fill(isSelected ? pillAccent.opacity(0.1) : Color.clear)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 4)
-                    .stroke(isSelected ? theme.accentColor : muted.opacity(0.5), lineWidth: 1)
+                    .stroke(isSelected ? pillAccent : (categoryColor != nil ? categoryColor!.opacity(0.3) : muted.opacity(0.5)), lineWidth: 1)
             )
         }
         .buttonStyle(.plain)

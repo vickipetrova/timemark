@@ -25,13 +25,27 @@ struct SettingsView: View {
                             HapticManager.light()
                         } label: {
                             HStack(spacing: 12) {
-                                RoundedRectangle(cornerRadius: 2)
-                                    .fill(t.accentColor)
-                                    .frame(width: 12, height: 12)
-                                    .overlay(
+                                Group {
+                                    if t.isSpectrum {
                                         RoundedRectangle(cornerRadius: 2)
-                                            .stroke(AppTheme.foreground(for: colorScheme).opacity(0.2), lineWidth: 1)
-                                    )
+                                            .fill(
+                                                LinearGradient(
+                                                    colors: [Color(hex: "#E74C3C"), Color(hex: "#F39C12"), Color(hex: "#27AE60"), Color(hex: "#3498DB")],
+                                                    startPoint: .topLeading,
+                                                    endPoint: .bottomTrailing
+                                                )
+                                            )
+                                            .frame(width: 12, height: 12)
+                                    } else {
+                                        RoundedRectangle(cornerRadius: 2)
+                                            .fill(t.accentColor(for: colorScheme))
+                                            .frame(width: 12, height: 12)
+                                    }
+                                }
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 2)
+                                        .stroke(AppTheme.foreground(for: colorScheme).opacity(0.2), lineWidth: 1)
+                                )
                                 Text(t.label)
                                     .font(.body)
                                     .foregroundStyle(AppTheme.foreground(for: colorScheme))
@@ -39,7 +53,7 @@ struct SettingsView: View {
                                 if selectedThemeRaw == t.rawValue {
                                     Image(systemName: "checkmark")
                                         .font(.caption2)
-                                        .foregroundStyle(theme.accentColor)
+                                        .foregroundStyle(theme.accentColor(for: colorScheme))
                                 }
                             }
                             .contentShape(Rectangle())
@@ -48,7 +62,7 @@ struct SettingsView: View {
 
                         if t.rawValue != AppTheme.allCases.last?.rawValue {
                             Rectangle()
-                                .fill(theme.mutedColor.opacity(0.3))
+                                .fill(theme.mutedColor(for: colorScheme).opacity(0.3))
                                 .frame(height: 0.5)
                         }
                     }
@@ -65,7 +79,7 @@ struct SettingsView: View {
                     }
 
                     Rectangle()
-                        .fill(theme.mutedColor.opacity(0.3))
+                        .fill(theme.mutedColor(for: colorScheme).opacity(0.3))
                         .frame(height: 0.5)
 
                     Button {
@@ -79,7 +93,7 @@ struct SettingsView: View {
                     .buttonStyle(.plain)
 
                     Rectangle()
-                        .fill(theme.mutedColor.opacity(0.3))
+                        .fill(theme.mutedColor(for: colorScheme).opacity(0.3))
                         .frame(height: 0.5)
 
                     Button {
@@ -104,7 +118,7 @@ struct SettingsView: View {
                     }
 
                     Rectangle()
-                        .fill(theme.mutedColor.opacity(0.3))
+                        .fill(theme.mutedColor(for: colorScheme).opacity(0.3))
                         .frame(height: 0.5)
 
 //                    Link(destination: URL(string: "https://apps.apple.com")!) {
@@ -115,7 +129,7 @@ struct SettingsView: View {
 //                    }
 
                     Rectangle()
-                        .fill(theme.mutedColor.opacity(0.3))
+                        .fill(theme.mutedColor(for: colorScheme).opacity(0.3))
                         .frame(height: 0.5)
 
                     Link(destination: URL(string: "mailto:victoria_petrowa@icloud.com")!) {
@@ -126,7 +140,7 @@ struct SettingsView: View {
                     }
 
                     Rectangle()
-                        .fill(theme.mutedColor.opacity(0.3))
+                        .fill(theme.mutedColor(for: colorScheme).opacity(0.3))
                         .frame(height: 0.5)
 
                     Link(destination: URL(string: "https://timemark.app/privacy")!) {

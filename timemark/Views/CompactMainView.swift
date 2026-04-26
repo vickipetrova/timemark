@@ -105,7 +105,7 @@ struct CompactMainView: View {
 
     private var toolbarDivider: some View {
         Rectangle()
-            .fill(theme.mutedColor)
+            .fill(theme.mutedColor(for: colorScheme))
             .frame(height: 1)
     }
 
@@ -234,7 +234,7 @@ struct CompactMainView: View {
             } label: {
                 Text("RESET")
             }
-            .tint(theme.accentColor)
+            .tint(theme.accentColor(for: colorScheme))
         }
     }
 
@@ -252,9 +252,10 @@ struct CompactMainView: View {
     }
 
     private var bottomBar: some View {
-        VStack(spacing: 0) {
+        let accent = theme.accentColor(for: colorScheme)
+        return VStack(spacing: 0) {
             Rectangle()
-                .fill(theme.mutedColor)
+                .fill(theme.mutedColor(for: colorScheme))
                 .frame(height: 1)
 
             HStack(spacing: 12) {
@@ -265,12 +266,12 @@ struct CompactMainView: View {
                     Text("+ EVENT")
                         .font(.caption.weight(.medium))
                         .tracking(2)
-                        .foregroundStyle(theme.accentColor)
+                        .foregroundStyle(accent)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 12)
                         .overlay(
                             RoundedRectangle(cornerRadius: 4)
-                                .stroke(theme.accentColor, lineWidth: 1)
+                                .stroke(accent, lineWidth: 1)
                         )
                 }
                 .buttonStyle(.plain)
@@ -282,12 +283,12 @@ struct CompactMainView: View {
                     Text("+ CATEGORY")
                         .font(.caption.weight(.medium))
                         .tracking(2)
-                        .foregroundStyle(theme.accentColor)
+                        .foregroundStyle(accent)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 12)
                         .overlay(
                             RoundedRectangle(cornerRadius: 4)
-                                .stroke(theme.accentColor, lineWidth: 1)
+                                .stroke(accent, lineWidth: 1)
                         )
                 }
                 .buttonStyle(.plain)

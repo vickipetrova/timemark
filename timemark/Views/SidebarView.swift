@@ -57,7 +57,7 @@ struct SidebarView: View {
                             .font(.caption.weight(.medium))
                             .tracking(2)
                     }
-                    .foregroundStyle(theme.accentColor)
+                    .foregroundStyle(theme.accentColor(for: colorScheme))
                 }
                 .buttonStyle(.plain)
             }
@@ -106,7 +106,7 @@ struct SidebarView: View {
         HStack {
             Image(systemName: "square.grid.2x2")
                 .font(.system(size: 14, weight: .thin))
-                .foregroundStyle(theme.accentColor)
+                .foregroundStyle(theme.accentColor(for: colorScheme))
             Text("ALL EVENTS")
                 .font(.caption.weight(.medium))
                 .tracking(1.5)

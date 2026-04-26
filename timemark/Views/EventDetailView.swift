@@ -49,7 +49,7 @@ struct EventDetailView: View {
                 .padding(.vertical, 20)
 
                 Rectangle()
-                    .fill(theme.mutedColor)
+                    .fill(theme.mutedColor(for: colorScheme))
                     .frame(height: 1)
 
                 actions
@@ -125,9 +125,17 @@ struct EventDetailView: View {
         }
     }
 
+    private var detailAccent: Color {
+        if theme.isSpectrum, let category = resolvedCategory {
+            return category.color
+        }
+        return theme.accentColor(for: colorScheme)
+    }
+
     private var header: some View {
         HStack(spacing: 8) {
             if let category = resolvedCategory {
+                let badgeColor = theme.isSpectrum ? category.color : theme.accentColor(for: colorScheme)
                 HStack(spacing: 5) {
                     Image(systemName: category.sfSymbol)
                         .font(.system(size: 10, weight: .thin))
@@ -135,12 +143,12 @@ struct EventDetailView: View {
                         .font(.caption2.weight(.medium))
                         .tracking(1.5)
                 }
-                .foregroundStyle(theme.accentColor)
+                .foregroundStyle(badgeColor)
                 .padding(.horizontal, 8)
                 .padding(.vertical, 5)
                 .overlay(
                     RoundedRectangle(cornerRadius: 4)
-                        .stroke(theme.accentColor, lineWidth: 1)
+                        .stroke(badgeColor, lineWidth: 1)
                 )
             }
             Text(event.eventType.short.uppercased())
@@ -150,7 +158,7 @@ struct EventDetailView: View {
                 .padding(.vertical, 5)
                 .overlay(
                     RoundedRectangle(cornerRadius: 4)
-                        .stroke(theme.mutedColor, lineWidth: 1)
+                        .stroke(theme.mutedColor(for: colorScheme), lineWidth: 1)
                 )
                 .foregroundStyle(AppTheme.mutedForeground(for: colorScheme))
         }
@@ -176,12 +184,12 @@ struct EventDetailView: View {
             Text(label)
                 .font(.caption.weight(.medium))
                 .tracking(2)
-                .foregroundStyle(theme.accentColor)
+                .foregroundStyle(detailAccent)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 12)
                 .overlay(
                     RoundedRectangle(cornerRadius: 4)
-                        .stroke(theme.accentColor, lineWidth: 1)
+                        .stroke(detailAccent, lineWidth: 1)
                 )
         }
         .buttonStyle(.plain)
@@ -223,7 +231,7 @@ struct EventDetailView: View {
                         .padding(.vertical, 10)
 
                         Rectangle()
-                            .fill(theme.mutedColor.opacity(0.5))
+                            .fill(theme.mutedColor(for: colorScheme).opacity(0.5))
                             .frame(height: 0.5)
                     }
                 }

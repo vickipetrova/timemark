@@ -11,6 +11,20 @@ struct EventCardView: View {
     @Environment(\.colorScheme) private var colorScheme
     @State private var isHovered = false
 
+    private var cardAccent: Color {
+        if theme.isSpectrum, let category {
+            return category.color
+        }
+        return theme.accentColor(for: colorScheme)
+    }
+
+    private var cardMuted: Color {
+        if theme.isSpectrum, let category {
+            return category.color.opacity(0.5)
+        }
+        return theme.mutedColor(for: colorScheme)
+    }
+
     var body: some View {
         let formatted = TimeFormatter.format(
             from: event.eventDate,
@@ -35,7 +49,7 @@ struct EventCardView: View {
                     if let category {
                         Text(category.name)
                             .font(.caption)
-                            .foregroundStyle(muted)
+                            .foregroundStyle(theme.isSpectrum ? cardAccent : muted)
                         Text("·")
                             .font(.caption)
                             .foregroundStyle(muted)
@@ -72,11 +86,11 @@ struct EventCardView: View {
         .padding(.vertical, 16)
         .padding(.horizontal, 20)
         .frame(minHeight: useGridLayout ? 100 : 0)
-        .background(isSelected ? theme.accentColor.opacity(0.06) : Color.clear)
+        .background(isSelected ? cardAccent.opacity(0.06) : Color.clear)
         .overlay(
             RoundedRectangle(cornerRadius: 4)
                 .stroke(
-                    isSelected ? theme.accentColor : (isHovered ? theme.accentColor : theme.mutedColor),
+                    isSelected ? cardAccent : (isHovered ? cardAccent : cardMuted),
                     lineWidth: 1
                 )
         )
