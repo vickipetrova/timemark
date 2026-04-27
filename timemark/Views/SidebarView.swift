@@ -16,26 +16,40 @@ struct SidebarView: View {
     @State private var categoryToDelete: EventCategory?
 
     var body: some View {
-        List(selection: $selectedCategoryID) {
-            allEventsRow
-                .tag(nil as UUID?)
+        List {
+            sidebarButton(
+                label: "ALL EVENTS",
+                systemImage: "square.grid.2x2",
+                iconColor: theme.accentColor(for: colorScheme),
+                count: allEvents.count,
+                isSelected: selectedCategoryID == nil
+            ) {
+                selectedCategoryID = nil
+            }
 
             Section {
                 ForEach(categories) { category in
-                    categoryRow(category)
-                        .tag(category.id as UUID?)
-                        .contextMenu {
-                            Button {
-                                editingCategory = category
-                            } label: {
-                                Label("Edit", systemImage: "pencil")
-                            }
-                            Button(role: .destructive) {
-                                categoryToDelete = category
-                            } label: {
-                                Label("Delete", systemImage: "trash")
-                            }
+                    sidebarButton(
+                        label: category.name,
+                        systemImage: category.sfSymbol,
+                        iconColor: category.color,
+                        count: allEvents.filter { $0.categoryID == category.id }.count,
+                        isSelected: selectedCategoryID == category.id
+                    ) {
+                        selectedCategoryID = category.id
+                    }
+                    .contextMenu {
+                        Button {
+                            editingCategory = category
+                        } label: {
+                            Label("Edit", systemImage: "pencil")
                         }
+                        Button(role: .destructive) {
+                            categoryToDelete = category
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    }
                 }
                 .onMove(perform: reorderCategories)
             } header: {
@@ -70,8 +84,9 @@ struct SidebarView: View {
             ToolbarItem(placement: .topBarLeading) {
                 Text("TALLY DAYS")
                     .font(.caption.weight(.medium))
-                    .tracking(4)
+                    .tracking(2)
                     .foregroundStyle(AppTheme.foreground(for: colorScheme))
+                    .fixedSize()
             }
         }
         .sheet(isPresented: $showingCreateCategory) {
@@ -102,38 +117,41 @@ struct SidebarView: View {
         }
     }
 
-    private var allEventsRow: some View {
-        HStack {
-            Image(systemName: "square.grid.2x2")
-                .font(.system(size: 14, weight: .thin))
-                .foregroundStyle(theme.accentColor(for: colorScheme))
-            Text("ALL EVENTS")
-                .font(.caption.weight(.medium))
-                .tracking(1.5)
-                .foregroundStyle(AppTheme.foreground(for: colorScheme))
-            Spacer()
-            Text("\(allEvents.count)")
-                .font(.system(size: 12, weight: .regular, design: .monospaced))
-                .foregroundStyle(AppTheme.mutedForeground(for: colorScheme))
+    private func sidebarButton(
+        label: String,
+        systemImage: String,
+        iconColor: Color,
+        count: Int,
+        isSelected: Bool,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                action()
+            }
+            HapticManager.selection()
+        } label: {
+            HStack {
+                Image(systemName: systemImage)
+                    .font(.system(size: 14, weight: .thin))
+                    .foregroundStyle(iconColor)
+                Text(label)
+                    .font(label == "ALL EVENTS" ? .caption.weight(.medium) : .body)
+                    .tracking(label == "ALL EVENTS" ? 1.5 : 0)
+                    .foregroundStyle(AppTheme.foreground(for: colorScheme))
+                Spacer()
+                Text("\(count)")
+                    .font(.system(size: 12, weight: .regular, design: .monospaced))
+                    .foregroundStyle(AppTheme.mutedForeground(for: colorScheme))
+            }
+            .contentShape(Rectangle())
         }
-        .contentShape(Rectangle())
-    }
-
-    private func categoryRow(_ category: EventCategory) -> some View {
-        let count = allEvents.filter { $0.categoryID == category.id }.count
-        return HStack {
-            Image(systemName: category.sfSymbol)
-                .font(.system(size: 14, weight: .thin))
-                .foregroundStyle(category.color)
-            Text(category.name)
-                .font(.body)
-                .foregroundStyle(AppTheme.foreground(for: colorScheme))
-            Spacer()
-            Text("\(count)")
-                .font(.system(size: 12, weight: .regular, design: .monospaced))
-                .foregroundStyle(AppTheme.mutedForeground(for: colorScheme))
-        }
-        .contentShape(Rectangle())
+        .buttonStyle(.plain)
+        .listRowBackground(
+            isSelected
+                ? theme.accentColor(for: colorScheme).opacity(0.1)
+                : Color.clear
+        )
     }
 
     private func reorderCategories(from source: IndexSet, to destination: Int) {

@@ -41,7 +41,7 @@ struct tallydaysApp: App {
                 .environment(\.appTheme, AppTheme(rawValue: selectedThemeRaw) ?? .monochrome)
                 .environment(reviewManager)
                 .tint(AppTheme(rawValue: selectedThemeRaw)?.accent ?? AppTheme.monochrome.accent)
-                .task { await seedDefaultCategoriesIfNeeded() }
+                .task { await seedOnLaunch() }
                 .task { _ = await ReminderManager.shared.requestPermissionIfNeeded() }
         }
         .modelContainer(modelContainer)
@@ -68,8 +68,17 @@ struct tallydaysApp: App {
     }
 
     @MainActor
-    private func seedDefaultCategoriesIfNeeded() async {
+    private func seedOnLaunch() async {
         let context = modelContainer.mainContext
+
+        #if DEBUG
+        if ScreenshotSeedData.isEnabled {
+            ScreenshotSeedData.seed(in: context)
+            UserDefaults.standard.set(true, forKey: "hasSeenOnboarding")
+            return
+        }
+        #endif
+
         let descriptor = FetchDescriptor<EventCategory>()
         guard let existing = try? context.fetch(descriptor), existing.isEmpty else { return }
 

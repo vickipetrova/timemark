@@ -170,14 +170,7 @@ struct SplitMainView: View {
     }
 
     private var gridColumns: [GridItem] {
-        switch layoutTier {
-        case .compact:
-            return [GridItem(.flexible())]
-        case .regular:
-            return [GridItem(.flexible()), GridItem(.flexible())]
-        case .expansive:
-            return [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
-        }
+        [GridItem(.flexible())]
     }
 
     private var contentTitle: String {

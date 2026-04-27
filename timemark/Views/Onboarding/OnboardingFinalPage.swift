@@ -55,6 +55,7 @@ struct OnboardingFinalPage: View {
     private func finish() {
         HapticManager.light()
         hasSeenOnboarding = true
+        NtfyNotifier.sendNewUser()
         reviewManager.promptReview()
     }
 }
